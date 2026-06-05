@@ -1,0 +1,24 @@
+{
+  "name": "mern-ts-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm:start --prefix backend\" \"npm:start --prefix frontend\"",
+    "lint": "npm:lint --prefix backend && npm:lint --prefix frontend",
+    "test": "npm:test --prefix backend && npm:test --prefix frontend",
+    "format": "npm:format --prefix backend && npm:format --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juma-altaitoon/mern-ts-starter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/juma-altaitoon/mern-ts-starter/issues"
+  },
+  "homepage": "https://github.com/juma-altaitoon/mern-ts-starter#readme"
+}
