@@ -14,11 +14,11 @@ if(!MONGO_URI) {
 }
 
 mongoose.connect(MONGO_URI)
-    .then(() => console.log("Connected to MongoDB!"))
+    .then(() => logger.info("Connected to MongoDB!"))
     .catch((error) => {
-        console.error("Error connecting to MongoDB", error);
+        logger.error("Error connecting to MongoDB", error);
         process.exit(1);
     });
 app.listen(PORT, () => {
-    console.log(`Server running on PORT: ${PORT}`);
+    logger.info(`Server running on PORT: ${PORT}`);
 });

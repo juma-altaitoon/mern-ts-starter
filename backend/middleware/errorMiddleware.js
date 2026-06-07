@@ -1,4 +1,4 @@
-import winston from 'winston';
+import logger from './logger.js';
 
 export const notFound = (req, res, next) => {
     const error = new Error(`Not Found - ${req.originalUrl}`);
@@ -8,16 +8,8 @@ export const notFound = (req, res, next) => {
 
 // Error handler middleware
 export const errorHandler = (err, req, res, next) => {
-    const logger = winston.createLogger({
-        level: "error",
-        transports: [
-            new winston.transports.File({
-                filename: "error.log",
-            })
-        ],
-    });
-    // Log error message with timestamp
-    logger.error(err.message, { timestamp: new Date().toISOString() })
+    // Log error message with timestamp using shared logger instance
+    logger.error(err.message, { timestamp: new Date().toISOString() });
 
     // If response status code is 200, change it to 500 
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
@@ -25,7 +17,6 @@ export const errorHandler = (err, req, res, next) => {
         message: err.message,
         stack: process.env.NODE_ENV === "production" ? null : err.stack,
     });
+};
 
-}
-
-export default { notFound, errorHandler};
+export default { notFound, errorHandler };
