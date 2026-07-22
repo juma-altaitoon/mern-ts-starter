@@ -1,6 +1,10 @@
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 const Contact: React.FC = () => {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
 
   return (
     <div className="grid gap-10 rounded-4xl border border-(--border) bg-(--surface-strong) p-10 shadow-(--shadow) text-(--text) sm:grid-cols-[1.2fr_0.8fr]">
@@ -19,6 +23,56 @@ const Contact: React.FC = () => {
           <p className="text-base font-medium text-(--text)">hello@novastack.app</p>
           <p className="text-(--muted)">Expect a friendly reply and maybe a witty onboarding gif.</p>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6 rounded-3xl border border-(--border) bg-(--surface) p-6">
+          <p className="text-sm uppercase tracking-[0.24em] text-(--muted)">Send a message</p>
+
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium text-(--text)">
+              Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Your name"
+              className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium text-(--text)">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="message" className="text-sm font-medium text-(--text)">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows={5}
+              placeholder="Tell us what you’re building or ask a question..."
+              className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent) resize-none"
+            />
+          </div>
+
+          <div className="space-y-3">
+            <Button type="submit" className="w-full rounded-2xl bg-(--accent) px-4 py-3 text-(--surface) hover:bg-(--accent-hover)">
+              Send message
+            </Button>
+            <p className="text-sm text-(--muted)">UI-only form for now; API hookup will come later.</p>
+          </div>
+        </form>
       </div>
 
       <div className="space-y-6 rounded-3xl bg-(--surface) p-8 shadow-inner shadow-(--shadow)">

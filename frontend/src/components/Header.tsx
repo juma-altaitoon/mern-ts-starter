@@ -1,9 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/hooks/useTheme';
+import { useAuth } from '@/hooks/useAuth';
+import { signout } from '@/features/auth/authService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const Header: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
+  const { user, loading } = useAuth();
+  const queryClient = useQueryClient();
+
+  const logoutMutation = useMutation({
+    mutationFn: signout,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      await queryClient.refetchQueries({ queryKey: ['auth', 'me'] });
+    },
+  });
 
   return (
     <header className="sticky top-0 z-40 border-b border-(--border) bg-(--surface)/95 backdrop-blur-xl">
@@ -37,17 +50,43 @@ const Header: React.FC = () => {
                   Dashboard
                 </Link>
               </li>
+              <li>
+                <Link to="/account" className="transition hover:text-(--accent)">
+                  Account
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
 
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="rounded-full border border-(--border) bg-(--surface-strong) px-4 py-2 text-sm font-semibold text-(--text) transition hover:border-(--accent) hover:bg-(--accent-muted)"
-        >
-          {isDark ? '☀️ Light mode' : '🌙 Dark mode'}
-        </button>
+        <div className="flex items-center gap-2">
+          {loading ? (
+            <span className="text-sm text-(--muted)">Loading...</span>
+          ) : user ? (
+            <button
+              type="button"
+              onClick={() => logoutMutation.mutate()}
+              className="rounded-full border border-(--border) bg-(--surface-strong) px-4 py-2 text-sm font-semibold text-(--text) transition hover:border-(--accent) hover:text-(--accent)"
+            >
+              {logoutMutation.isPending ? 'Signing out...' : 'Sign out'}
+            </button>
+          ) : (
+            <Link
+              to="/auth/signin"
+              className="rounded-full border border-(--border) bg-(--surface-strong) px-4 py-2 text-sm font-semibold text-(--text) transition hover:border-(--accent) hover:text-(--accent)"
+            >
+              Sign in
+            </Link>
+          )}
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="rounded-full border border-(--border) bg-(--surface-strong) px-4 py-2 text-sm font-semibold text-(--text) transition hover:border-(--accent) hover:bg-(--accent-muted)"
+          >
+            {isDark ? '☀️ Light mode' : '🌙 Dark mode'}
+          </button>
+        </div>
       </div>
     </header>
   );

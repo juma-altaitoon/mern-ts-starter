@@ -1,6 +1,19 @@
 import User from '../models/User.js';
 import logger from '../middleware/logger.js';
 
+// Auth Check
+export const authCheck = async (req, res) => {
+    const userId = req.user;
+    if (!req.user){
+        return res.status(401).json({ message: "User not Logged in"})
+    }
+    try {
+        const user = await User.findById(userId).select(["_id", "firstName"]);
+        return res.status(200).json({ message: "User is signed in.", user});
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized access.", error: error.message});
+    }
+}
 
 // Signup
 export const signup = async (req, res) => {
@@ -23,7 +36,7 @@ export const signup = async (req, res) => {
         }   
     } catch (error) {
         logger.error("Error checking existing user", error);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Server error", error: error });
     }
 
     const user = new User({
@@ -43,7 +56,7 @@ export const signup = async (req, res) => {
         return res.status(201).json({ message: "User registered successfully." })
     } catch (error) {
         logger.error("Error registering user", error);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -86,4 +99,4 @@ export const signout = async (req, res) => {
     return res.status(200).json({ message: "Sign out successful." });
 }
 
-export default { signup, signin, signout };
+export default { authCheck, signup, signin, signout };

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minLength: 12,
+        minlength: 12,
     },
     role: {
         type: String,
@@ -75,7 +75,6 @@ userSchema.pre('save', async function (next) {
     }
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 // Compare passwords on Login

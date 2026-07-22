@@ -30,12 +30,12 @@ app.use(
 );
 
 // Routes
-app.use("/api/v1", limiter);
-app.use("/api/v1/auth", limiter, authRouter);
-app.use("/api/v1/user", limiter, userRouter)
+app.use("/api", limiter);
+app.use("/api/auth", limiter, authRouter);
+app.use("/api/user", limiter, userRouter)
 
-
-app.use(notFound);
 app.use(errorHandler);
+app.use(notFound);
+
 
 export default app;
