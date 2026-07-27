@@ -51,4 +51,18 @@ export const updateProfile = async (req, res) => {
     }
 }
 
-export default { getProfile, updateProfile };
+export const listUsers = async (req, res) => {
+    try {
+        const users = await User.find().select(protectedFields);
+        if (!users || users.length === 0) {
+            return res.status(200).json({ message: "No users found.", users });
+        }
+        logger.info("Users retrieved successfully")
+        return res.status(200).json({ message: "Users retrieved successfully", messages});
+    } catch (error) {
+        logger.error("Error retrieving users: ", error.message);
+        return res.status(500).json({ message: "Error retrieving users.", error: error.message });
+    }
+}
+
+export default { getProfile, updateProfile, listUsers };

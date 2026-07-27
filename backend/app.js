@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import messageRouter from './routes/messageRoutes.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use(
 app.use("/api", limiter);
 app.use("/api/auth", limiter, authRouter);
 app.use("/api/user", limiter, userRouter)
+app.use("/api/message", limiter, messageRouter);
 
 app.use(errorHandler);
 app.use(notFound);

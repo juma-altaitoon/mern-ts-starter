@@ -79,7 +79,7 @@ const Account: React.FC = () => {
     <div className="mx-auto flex max-w-5xl flex-col gap-8 py-10">
       <section className="rounded-[2rem] border border-(--border) bg-(--surface) p-8 shadow-2xl shadow-(--shadow)">
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-(--accent)">Account profile</p>
-        <h1 className="mt-3 text-3xl font-semibold text-(--text)">Hello, {user?.name ?? 'there'}.</h1>
+        <h1 className="mt-3 text-3xl font-semibold text-(--text)">Hello, {user?.firstName ?? 'there'}.</h1>
         <p className="mt-3 max-w-2xl text-(--muted) leading-7">
           Update your personal details and keep your account information current.
         </p>
@@ -87,7 +87,7 @@ const Account: React.FC = () => {
 
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <form
-          className="rounded-[1.5rem] border border-(--border) bg-(--surface-strong) p-6"
+          className="rounded-3xl border border-(--border) bg-(--surface-strong) p-6"
           onSubmit={handleSubmit((values) => mutation.mutate(values))}
         >
           <p className="text-sm font-semibold text-(--accent)">Edit profile</p>
@@ -128,12 +128,12 @@ const Account: React.FC = () => {
           </button>
         </form>
 
-        <div className="rounded-[1.5rem] border border-(--border) bg-(--surface-strong) p-6">
+        <div className="rounded-3xl border border-(--border) bg-(--surface-strong) p-6">
           <p className="text-sm font-semibold text-(--accent)">Account summary</p>
           <dl className="mt-4 space-y-4 text-sm text-(--muted)">
             <div className="flex items-center justify-between border-b border-(--border) pb-3">
               <dt className="font-medium text-(--text)">Name</dt>
-              <dd>{user?.name ?? 'Not available'}</dd>
+              <dd>{user?.firstName ?? 'Not available'}</dd>
             </div>
             <div className="flex items-center justify-between border-b border-(--border) pb-3">
               <dt className="font-medium text-(--text)">Email</dt>

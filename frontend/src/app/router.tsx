@@ -12,7 +12,7 @@ import Dashboard from '@/pages/Dashboard';
 import Account from '@/pages/Account';
 import NotFound from '@/pages/NotFound';
 import { AuthGuard } from '@/features/auth/AuthGuard';
-// import { AdminRoute } from '@/routes/AdminRoutes';
+import { AdminRoute } from '@/routes/AdminRoutes';
 // import { PrivateRoute } from '@/routes/PrivateRoutes';
 
 const router = createBrowserRouter([
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
             { path: 'auth/signin', element: <AuthGuard requireAuth={false}><SignIn /></AuthGuard> },
             { path: 'auth/signup', element: <AuthGuard requireAuth={false}><SignUp /></AuthGuard> },
             { path: 'auth/forgot-password', element: <AuthGuard requireAuth={false}><ForgotPassword /></AuthGuard> },
-            { path: 'dashboard', element: <AuthGuard><Dashboard /></AuthGuard> },
+            { path: 'dashboard', element: <AuthGuard><AdminRoute><Dashboard /></AdminRoute></AuthGuard> },
             { path: 'account', element: <AuthGuard><Account /></AuthGuard> },
             { path: '*', element: <NotFound /> },
         ]

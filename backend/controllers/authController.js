@@ -8,7 +8,13 @@ export const authCheck = async (req, res) => {
         return res.status(401).json({ message: "User not Logged in"})
     }
     try {
-        const user = await User.findById(userId).select(["_id", "firstName"]);
+        const user = await User.findById(userId).select([
+            "_id",
+            "firstName",
+            "email",
+            "role",
+            "avatar",
+        ]);
         return res.status(200).json({ message: "User is signed in.", user});
     } catch (error) {
         return res.status(401).json({ message: "Unauthorized access.", error: error.message});

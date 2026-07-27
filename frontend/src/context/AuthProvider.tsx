@@ -9,7 +9,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         queryKey: ['auth', 'me'],
         queryFn: async () => {
             const res = await api.get('/auth/me');
-            return res.data ?? null;
+            return res.data.user ?? null;
         },
         retry: false, // do not retry auth checks automatically
     });
