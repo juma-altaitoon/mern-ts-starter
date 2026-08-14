@@ -1,10 +1,48 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useMutation } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { createMessage } from '@/features/contact/contactService';
+import { useToast } from '@/features/notifications/useToast';
+
+const contactSchema = z.object({
+  name: z.string().min(2, 'Please enter your name.'),
+  email: z.email('Please enter a valid email address.'),
+  content: z.string().min(10, 'Please share a message with at least 10 characters.'),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 const Contact: React.FC = () => {
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
+  const { addToast } = useToast();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      content: '',
+    },
+  });
+
+  const messageMutation = useMutation({
+    mutationFn: createMessage,
+    onSuccess: () => {
+      addToast('Message sent', 'Your message was submitted successfully.', 'success');
+      reset();
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : 'Unable to send your message right now.';
+      addToast('Submission failed', message, 'error');
+    },
+  });
 
   return (
     <div className="grid gap-10 rounded-4xl border border-(--border) bg-(--surface-strong) p-10 shadow-(--shadow) text-(--text) sm:grid-cols-[1.2fr_0.8fr]">
@@ -24,53 +62,63 @@ const Contact: React.FC = () => {
           <p className="text-(--muted)">Expect a friendly reply and maybe a witty onboarding gif.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 rounded-3xl border border-(--border) bg-(--surface) p-6">
+        <form
+          onSubmit={handleSubmit((values) => messageMutation.mutate(values))}
+          className="space-y-6 rounded-3xl border border-(--border) bg-(--surface) p-6"
+          noValidate
+        >
           <p className="text-sm uppercase tracking-[0.24em] text-(--muted)">Send a message</p>
 
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium text-(--text)">
-              Name
-            </label>
+            <label htmlFor="name" className="text-sm font-medium text-(--text)">Name</label>
             <input
               id="name"
-              name="name"
               type="text"
-              placeholder="Your name"
+              {...register('name')}
               className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)"
+              placeholder="Your name"
+              aria-invalid={Boolean(errors.name)}
             />
+            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-(--text)">
-              Email
-            </label>
+            <label htmlFor="email" className="text-sm font-medium text-(--text)">Email</label>
             <input
               id="email"
-              name="email"
               type="email"
-              placeholder="you@example.com"
+              {...register('email')}
               className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)"
+              placeholder="you@example.com"
+              aria-invalid={Boolean(errors.email)}
             />
+            {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-medium text-(--text)">
-              Message
-            </label>
+            <label htmlFor="content" className="text-sm font-medium text-(--text)">Message</label>
             <textarea
-              id="message"
-              name="message"
+              id="content"
               rows={5}
+              {...register('content')}
               placeholder="Tell us what you’re building or ask a question..."
               className="w-full rounded-2xl border border-(--border) bg-(--surface-strong) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent) resize-none"
+              aria-invalid={Boolean(errors.content)}
             />
+            {errors.content && <p className="text-sm text-red-500">{errors.content.message}</p>}
           </div>
 
           <div className="space-y-3">
-            <Button type="submit" className="w-full rounded-2xl bg-(--accent) px-4 py-3 text-(--surface) hover:bg-(--accent-hover)">
-              Send message
+            <Button
+              type="submit"
+              className="w-full rounded-2xl bg-(--accent) px-4 py-3 text-(--surface) hover:bg-(--accent-hover)"
+              disabled={messageMutation.isPending}
+            >
+              {messageMutation.isPending ? 'Sending message...' : 'Send message'}
             </Button>
-            <p className="text-sm text-(--muted)">UI-only form for now; API hookup will come later.</p>
+            <p className="text-sm text-(--muted)">
+              Your message is securely submitted to the backend for review.
+            </p>
           </div>
         </form>
       </div>

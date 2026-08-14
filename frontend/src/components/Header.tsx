@@ -44,8 +44,8 @@ const Header: React.FC = () => {
   const logoutMutation = useMutation({
     mutationFn: signout,
     onSuccess: async () => {
+      queryClient.setQueryData(['auth', 'me'], null);
       await queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
-      await queryClient.refetchQueries({ queryKey: ['auth', 'me'] });
     },
   });
 

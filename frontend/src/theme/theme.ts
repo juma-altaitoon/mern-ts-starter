@@ -22,7 +22,7 @@ export const themeConfig: Record<ThemeName, ThemeTokens> = {
     text: '#0f172a',
     muted: '#475569',
     border: '#e2e8f0',
-    accent: '#22d3ee',
+    accent: '#020617',//'#22d3ee',
     accentHover: '#0891b2',
     accentMuted: '#bae6fd',
     card: '#f8fafc',

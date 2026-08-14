@@ -8,8 +8,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data, isLoading, refetch } = useQuery<User | null>({
         queryKey: ['auth', 'me'],
         queryFn: async () => {
-            const res = await api.get('/auth/me');
-            return res.data.user ?? null;
+            try {
+                const res = await api.get('/auth/me');
+                return res.data.user ?? null;
+            } catch {
+                return null;
+            }
         },
         retry: false, // do not retry auth checks automatically
     });

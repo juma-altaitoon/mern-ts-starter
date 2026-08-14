@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { profileSchema, type ProfileFormValues } from '@/features/auth/profileSchemas';
 import { getProfile, updateProfile } from '@/features/auth/profileService';
-import { useToast } from '@/features/notifications/ToastProvider';
+import { useToast } from '@/features/notifications/useToast';
 
 /**
  * Editable account page backed by the existing backend profile endpoints.

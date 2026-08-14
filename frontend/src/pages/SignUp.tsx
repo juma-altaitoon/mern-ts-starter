@@ -8,7 +8,8 @@ import { signupSchema, type SignupFormValues } from '@/features/auth/authSchemas
 import { signup } from '@/features/auth/authService';
 import { AuthFormLayout } from '@/features/auth/AuthFormLayout';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/features/notifications/ToastProvider';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/features/notifications/useToast';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
 
 const SignUp: React.FC = () => {
@@ -70,50 +71,115 @@ const SignUp: React.FC = () => {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <label htmlFor="firstName" className="text-sm font-medium text-(--text)">First name</label>
-            <input id="firstName" className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)" {...register('firstName')} />
-            {errors.firstName && <p className="text-sm text-red-500">{errors.firstName.message}</p>}
+            <Input
+              id="firstName"
+              aria-invalid={!!errors.firstName}
+              aria-describedby={errors.firstName ? 'firstName-error' : undefined}
+              {...register('firstName')}
+            />
+            {errors.firstName && (
+              <p id="firstName-error" className="text-sm text-red-500">
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="lastName" className="text-sm font-medium text-(--text)">Last name</label>
-            <input id="lastName" className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)" {...register('lastName')} />
-            {errors.lastName && <p className="text-sm text-red-500">{errors.lastName.message}</p>}
+            <Input
+              id="lastName"
+              aria-invalid={!!errors.lastName}
+              aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+              {...register('lastName')}
+            />
+            {errors.lastName && (
+              <p id="lastName-error" className="text-sm text-red-500">
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
         </div>
 
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium text-(--text)">Email</label>
-          <input id="email" type="email" className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)" {...register('email')} />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            {...register('email')}
+          />
+          {errors.email && (
+            <p id="email-error" className="text-sm text-red-500">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
           <label htmlFor="password" className="text-sm font-medium text-(--text)">Password</label>
           <div className="relative">
-            <input id="password" type={showPassword ? 'text' : 'password'} className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 pr-12 text-(--text) outline-none transition focus:border-(--accent)" {...register('password')} />
-            <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted)" aria-label={showPassword ? 'Hide password' : 'Show password'}>
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              className="pr-12"
+              {...register('password')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted)"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+          {errors.password && (
+            <p id="password-error" className="text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
           {!errors.password && passwordValue ? (
-            <p className={`text-sm ${passwordStrength.tone}`}>Password strength: {passwordStrength.label}</p>
+            <p className={`text-sm ${passwordStrength.tone}`}>
+              Password strength: {passwordStrength.label}
+            </p>
           ) : null}
         </div>
 
         <div className="space-y-2">
           <label htmlFor="confirmPassword" className="text-sm font-medium text-(--text)">Confirm password</label>
           <div className="relative">
-            <input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 pr-12 text-(--text) outline-none transition focus:border-(--accent)" {...register('confirmPassword')} />
-            <button type="button" onClick={() => setShowConfirmPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted)" aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}>
+            <Input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              aria-invalid={!!errors.confirmPassword}
+              aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
+              className="pr-12"
+              {...register('confirmPassword')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted)"
+              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+            >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && (
+            <p id="confirmPassword-error" className="text-sm text-red-500">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
 
         {mutation.isError && (
-          <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
+          <p role="alert" className="rounded-2xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
             {(mutation.error as Error)?.message || 'Unable to create your account right now.'}
           </p>
         )}

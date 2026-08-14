@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export const AdminRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     const { user, loading } = useAuth();
+
     if (loading) {
         return (
             <div className="p-8">
@@ -11,9 +12,8 @@ export const AdminRoute: React.FC<{ children: JSX.Element }> = ({ children }) =>
             </div>
         );
     }
-    return (
-        user?.role === 'admin' 
-            ? children
-            : <Navigate to="/dashboard" replace /> 
-    );
+
+    return user?.role === 'admin'
+        ? children
+        : <Navigate to="/" replace />;
 };

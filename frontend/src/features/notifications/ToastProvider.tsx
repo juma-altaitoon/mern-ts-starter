@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CheckCircle2, Info, AlertTriangle, X } from 'lucide-react'
+import { ToastContext, type ToastContextValue } from './toastContext'
 
 type ToastVariant = 'success' | 'error' | 'info' | 'warning'
 
@@ -11,17 +12,11 @@ type ToastItem = {
   variant: ToastVariant
 }
 
-type ToastContextValue = {
-  addToast: (title: string, description: string, variant?: ToastVariant) => void
-}
-
-const ToastContext = createContext<ToastContextValue | undefined>(undefined)
-
 const variantStyles: Record<ToastVariant, string> = {
-  success: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-900',
-  error: 'border-red-500/30 bg-red-500/10 text-red-900',
-  info: 'border-sky-500/30 bg-sky-500/10 text-sky-900',
-  warning: 'border-amber-500/30 bg-amber-500/10 text-amber-900',
+  success: 'border-emerald-500/30 bg-emerald-500/50 text-white',
+  error: 'border-red-500/30 bg-red-500/50 text-white',
+  info: 'border-sky-500/30 bg-sky-500/50 text-white',
+  warning: 'border-amber-500/30 bg-amber-500/50 text-white',
 }
 
 const variantIcons: Record<ToastVariant, React.ElementType> = {
@@ -33,13 +28,9 @@ const variantIcons: Record<ToastVariant, React.ElementType> = {
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([])
-  const [isMounted, setIsMounted] = useState(false)
+  const isBrowser = typeof document !== 'undefined'
 
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  const addToast = (title: string, description: string, variant: ToastVariant = 'info') => {
+  const addToast = useCallback((title: string, description: string, variant: ToastVariant = 'info') => {
     const id = crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
     const toast: ToastItem = { id, title, description, variant }
 
@@ -48,14 +39,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     window.setTimeout(() => {
       setToasts((current) => current.filter((item) => item.id !== id))
     }, 5000)
-  }
+  }, [])
 
-  const value = useMemo(() => ({ addToast }), [])
+  const value = useMemo<ToastContextValue>(() => ({ addToast }), [addToast])
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      {isMounted && createPortal(
+      {isBrowser && createPortal(
         <div className="pointer-events-none fixed inset-x-0 top-4 z-50 flex flex-col items-center gap-3 px-4 sm:items-end sm:px-6">
           {toasts.map((toast) => {
             const Icon = variantIcons[toast.variant]
@@ -91,11 +82,3 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   )
 }
 
-export const useToast = () => {
-  const context = useContext(ToastContext)
-  if (!context) {
-    throw new Error('useToast must be used within a ToastProvider')
-  }
-
-  return context
-}

@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,  // 15 mins
+    windowMs: 30 * 60 * 1000,  // 15 mins
     max: 100,  // limit of 100 reqs per IP
     standardHeaders: true,
     legacyHeaders: false,

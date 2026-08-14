@@ -6,7 +6,8 @@ import { forgotPasswordSchema, type ForgotPasswordFormValues } from '@/features/
 import { forgotPassword } from '@/features/auth/authService';
 import { AuthFormLayout } from '@/features/auth/AuthFormLayout';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/features/notifications/ToastProvider';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/features/notifications/useToast';
 
 const ForgotPassword: React.FC = () => {
   const { addToast } = useToast();
@@ -43,24 +44,29 @@ const ForgotPassword: React.FC = () => {
           <label htmlFor="email" className="text-sm font-medium text-(--text)">
             Email
           </label>
-          <input
+          <Input
             id="email"
             type="email"
             autoComplete="email"
-            className="w-full rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-none transition focus:border-(--accent)"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             {...register('email')}
           />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          {errors.email && (
+            <p id="email-error" className="text-sm text-red-500">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         {mutation.isSuccess && (
-          <p className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600">
+          <p role="status" className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600">
             If an account exists for this email, you will receive reset instructions shortly.
           </p>
         )}
 
         {mutation.isError && (
-          <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
+          <p role="alert" className="rounded-2xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
             {(mutation.error as Error)?.message || 'Unable to send reset instructions right now.'}
           </p>
         )}

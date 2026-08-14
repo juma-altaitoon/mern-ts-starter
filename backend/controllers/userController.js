@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import logger from '../middleware/logger.js';
 
-const protectedFields = ["-password", "-role", "-resetToken", "-resetTokenExpiration"];
+const protectedFields = ["-password", "-role", "-token", "-tokenExpiration"];
 
 export const getProfile = async (req, res) => {
     try {
