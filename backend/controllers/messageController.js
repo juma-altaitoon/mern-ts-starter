@@ -1,7 +1,11 @@
 import logger from "../middleware/logger.js";
 import Message from "../models/Message.js";
 
-// Create Message
+/**
+ * Handles the creation of a new message.
+ * It receives the message details from the request body, creates a new Message instance, and saves it to the database.
+ * If the message is saved successfully, it returns a success response; otherwise, it returns an error response.
+ */
 export const createMessage = async (req, res) => {
     const { name, email, content } = req.body;
 
@@ -22,6 +26,11 @@ export const createMessage = async (req, res) => {
 };
 
 // List all messages
+/**
+ * Retrieves a list of all messages from the database, sorted by creation date in descending order.
+ * If messages are found, it returns them in the response; otherwise, it returns a message indicating no messages were found.
+ * In case of an error during retrieval, it returns an error response.
+ */
 export const listMessages = async (req, res) => {
     
     try {

@@ -12,6 +12,7 @@ import crypto from 'crypto';
 // Auth Check
 /**
  * Checks if the user is authenticated by verifying the presence of a valid user ID in the request.
+ * Requires auth middleware to set req.user (JWT verification).
  * If the user is authenticated, it retrieves the user's details from the database and returns them in the response.
  * If the user is not authenticated or an error occurs, it returns an appropriate error message.
  */
@@ -37,7 +38,7 @@ export const authCheck = async (req, res) => {
 // Sign Up
 /**
  * Handles user registration by creating a new user in the database.
- * It checks if the email already exists, hashes the password, and saves the user.
+ * It checks if the email already exists and saves the user.
  * After successful registration, it generates a verification token and sends a welcome email with a verification link.
  */
 export const signup = async (req, res) => {
@@ -129,6 +130,7 @@ export const verifyAccount = async (req, res) => {
 /**
  * Handles user sign-in by verifying the provided email and password.
  * If the credentials are valid, it generates a JSON Web Token (JWT) and sets it in an HTTP-only cookie.
+ * Cookie expiry is 1 hour in code.
  * The response includes a success message and the user's ID.
  * If the credentials are invalid or any error occurs, it returns an appropriate error message.
  */

@@ -62,9 +62,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
     avatar: {
-        type: String,
+        type: String, // Cloudinary URL
         trim: true,
         default: null,
+    },
+    avatarPublicId: {
+        type: String, // Cloudinary public ID for deletion reference
+        default: null,
+        trim: true,
     },
     status: {
         type: String,
